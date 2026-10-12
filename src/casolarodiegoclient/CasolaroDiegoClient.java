@@ -18,7 +18,8 @@ public class CasolaroDiegoClient {
      * 10.205.0.50
      */
     public static void main(String[] args) throws IOException {
-        String ip = "10.205.0.22";
+        //String ip = "10.205.0.22";
+        String ip = "localhost";
         int porta = 12345;
         Socket socket= new Socket(ip,porta);
         Scanner scanner=new Scanner(System.in);
