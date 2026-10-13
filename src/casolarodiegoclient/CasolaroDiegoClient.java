@@ -21,6 +21,7 @@ public class CasolaroDiegoClient {
         //String ip = "10.205.0.22";
         String ip = "10.205.0.22";
         int porta = 12345;
+        
         try (
             Socket socket = new Socket(ip, porta);
             Scanner scanner = new Scanner(System.in);
