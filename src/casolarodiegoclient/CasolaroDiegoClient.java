@@ -21,38 +21,35 @@ public class CasolaroDiegoClient {
         //String ip = "10.205.0.22";
         String ip = "10.205.0.22";
         int porta = 12345;
-        Socket socket= new Socket(ip,porta);
-        Scanner scanner=new Scanner(System.in);
-        String message, response;
-        
-        InputStream inputStream = socket.getInputStream();
-        DataInputStream dataInputStream = new DataInputStream(inputStream);
-        OutputStream outputStream = socket.getOutputStream();
-        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-        
-        
-        response = dataInputStream.readUTF(); // Su response ho la risposta
-        System.out.println(response);
-        
-        dataOutputStream.writeUTF("Ciao io sono Eldego e sono collegato!");
-        response = dataInputStream.readUTF(); // Su response ho la risposta
-        System.out.println(response);
-        
-        if(response=="Arrivederci"){
-            socket.close();
-        }
-        else{
-            do{
-                System.out.println("messaggia:");
-                message = scanner.nextLine();
-                dataOutputStream.writeUTF(message);
+        try (
+            Socket socket = new Socket(ip, porta);
+            Scanner scanner = new Scanner(System.in);
+            DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream())
+        ) {
+            // Ricezione benvenuto
+            String response = dataInputStream.readUTF();
+            System.out.println(response);
 
-                response = dataInputStream.readUTF(); // Su response ho la risposta
-                System.out.println(response);
-                
-            }while(!response.equals("Arrivederci")||!message.equals("Arrivederci"));
-            
-            socket.close();
+            // Primo messaggio
+            dataOutputStream.writeUTF("Ciao io sono Eldego e sono collegato!");
+            response = dataInputStream.readUTF();
+            System.out.println(response);
+
+            if ("Arrivederci".equals(response)) {
+                System.out.println("Connessione chiusa dal server.");
+            } else {
+                String message;
+                do {
+                    System.out.print("messaggia: ");
+                    message = scanner.nextLine();
+                    dataOutputStream.writeUTF(message);
+
+                    response = dataInputStream.readUTF();
+                    System.out.println(response);
+
+                } while (!"Arrivederci".equals(response) && !"Arrivederci".equals(message));
+            }
         }
-    }    
+    }
 }
